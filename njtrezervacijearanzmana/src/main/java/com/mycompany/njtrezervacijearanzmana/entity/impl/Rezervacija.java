@@ -51,6 +51,11 @@ public class Rezervacija {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "aranzman_id", nullable = false)
     private Aranzman aranzman;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "zaposleni_id", nullable = false)
+    private Zaposleni zaposleni;
+    
 
     @OneToMany(mappedBy = "rezervacija", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StavkaRezervacije> stavke = new ArrayList<>();
@@ -75,4 +80,7 @@ public class Rezervacija {
 
     public List<StavkaRezervacije> getStavke() { return stavke; }
     public void setStavke(List<StavkaRezervacije> stavke) { this.stavke = stavke; }
+    
+    public Zaposleni getZaposleni() { return zaposleni; }
+    public void setZaposleni(Zaposleni zaposleni) { this.zaposleni = zaposleni; }
 }

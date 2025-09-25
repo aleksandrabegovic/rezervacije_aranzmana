@@ -11,16 +11,21 @@ import java.util.List;
 public class RezervacijaDto implements MyDto {
     private Long id;
 
-    private LocalDateTime datumKreiranja;     // read-only (postavlja se server-side)
+    // postavlja server; može ostati null u POST-u
+    private LocalDateTime datumKreiranja;
 
     @Size(max = 500)
     private String napomena;
 
-    // read-only, puni servis
+    // read-only; popunjava servis zbirom stavki
     private BigDecimal ukupno;
 
     @NotNull(message = "aranzmanId je obavezan")
     private Long aranzmanId;
+
+    // ⬇⬇⬇ NOVO: veza Rezervacija -> Zaposleni (many-to-one)
+    @NotNull(message = "zaposleniId je obavezan")
+    private Long zaposleniId;
 
     @Valid
     private List<StavkaRezervacijeDto> stavke;
@@ -28,21 +33,35 @@ public class RezervacijaDto implements MyDto {
     public RezervacijaDto() {}
 
     public RezervacijaDto(Long id, LocalDateTime datumKreiranja, String napomena,
-                          BigDecimal ukupno, Long aranzmanId, List<StavkaRezervacijeDto> stavke) {
-        this.id = id; this.datumKreiranja = datumKreiranja; this.napomena = napomena;
-        this.ukupno = ukupno; this.aranzmanId = aranzmanId; this.stavke = stavke;
+                          BigDecimal ukupno, Long aranzmanId, Long zaposleniId,
+                          List<StavkaRezervacijeDto> stavke) {
+        this.id = id;
+        this.datumKreiranja = datumKreiranja;
+        this.napomena = napomena;
+        this.ukupno = ukupno;
+        this.aranzmanId = aranzmanId;
+        this.zaposleniId = zaposleniId;
+        this.stavke = stavke;
     }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public LocalDateTime getDatumKreiranja() { return datumKreiranja; }
     public void setDatumKreiranja(LocalDateTime datumKreiranja) { this.datumKreiranja = datumKreiranja; }
+
     public String getNapomena() { return napomena; }
     public void setNapomena(String napomena) { this.napomena = napomena; }
+
     public BigDecimal getUkupno() { return ukupno; }
     public void setUkupno(BigDecimal ukupno) { this.ukupno = ukupno; }
+
     public Long getAranzmanId() { return aranzmanId; }
     public void setAranzmanId(Long aranzmanId) { this.aranzmanId = aranzmanId; }
+
+    public Long getZaposleniId() { return zaposleniId; }
+    public void setZaposleniId(Long zaposleniId) { this.zaposleniId = zaposleniId; }
+
     public List<StavkaRezervacijeDto> getStavke() { return stavke; }
     public void setStavke(List<StavkaRezervacijeDto> stavke) { this.stavke = stavke; }
 }

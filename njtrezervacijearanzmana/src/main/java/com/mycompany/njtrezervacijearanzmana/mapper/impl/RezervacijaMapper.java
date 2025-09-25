@@ -6,6 +6,7 @@ import com.mycompany.njtrezervacijearanzmana.entity.impl.Aranzman;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Putnik;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Rezervacija;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.StavkaRezervacije;
+import com.mycompany.njtrezervacijearanzmana.entity.impl.Zaposleni; // ⬅ import
 import com.mycompany.njtrezervacijearanzmana.mapper.DtoEntityMapper;
 import org.springframework.stereotype.Component;
 
@@ -28,15 +29,17 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
                 s.getCena(),
                 s.getPopustProcenat(),
                 s.getIznos(),
-                s.getPutnik() != null ? s.getPutnik().getId() : null  
+                s.getPutnik() != null ? s.getPutnik().getId() : null
             )).collect(Collectors.toList());
 
+        // ⬇⬇⬇ dodato: zaposleniId kao 6. argument pre liste stavki
         return new RezervacijaDto(
             e.getId(),
             e.getDatumKreiranja(),
             e.getNapomena(),
             e.getUkupno(),
             e.getAranzman() != null ? e.getAranzman().getId() : null,
+            e.getZaposleni() != null ? e.getZaposleni().getId() : null,
             stavkeDto
         );
     }
@@ -49,7 +52,9 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
         r.setDatumKreiranja(t.getDatumKreiranja());
         r.setNapomena(t.getNapomena());
         r.setUkupno(t.getUkupno());
+
         if (t.getAranzmanId() != null) r.setAranzman(new Aranzman(t.getAranzmanId()));
+        if (t.getZaposleniId() != null) r.setZaposleni(new Zaposleni(t.getZaposleniId())); // ⬅ novo
 
         List<StavkaRezervacije> items = new ArrayList<>();
         if (t.getStavke() != null) {
@@ -62,7 +67,7 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
                 s.setPopustProcenat(sd.getPopustProcenat());
                 s.setRezervacija(r);
                 if (sd.getPutnikId() != null) {
-                    s.setPutnik(new Putnik(sd.getPutnikId()));   
+                    s.setPutnik(new Putnik(sd.getPutnikId()));
                 }
                 items.add(s);
             }
@@ -70,5 +75,4 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
         r.setStavke(items);
         return r;
     }
-
 }
