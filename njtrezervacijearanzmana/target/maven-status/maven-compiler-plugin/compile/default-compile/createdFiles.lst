@@ -1,0 +1,12 @@
+com\mycompany\njtrezervacijearanzmana\dto\MyDto.class
+com\mycompany\njtrezervacijearanzmana\repository\impl\TipAranzmanaRepository.class
+com\mycompany\njtrezervacijearanzmana\repository\MyAppRepository.class
+com\mycompany\njtrezervacijearanzmana\dto\impl\TipAranzmanaDto.class
+com\mycompany\njtrezervacijearanzmana\mapper\DtoEntityMapper.class
+com\mycompany\njtrezervacijearanzmana\entity\impl\TipAranzmana.class
+com\mycompany\njtrezervacijearanzmana\mapper\impl\TipAranzmanaMapper.class
+com\mycompany\njtrezervacijearanzmana\entity\MyEntity.class
+com\mycompany\njtrezervacijearanzmana\Main.class
+com\mycompany\njtrezervacijearanzmana\entity\impl\Aranzman.class
+com\mycompany\njtrezervacijearanzmana\servis\TipAranzmanaServis.class
+com\mycompany\njtrezervacijearanzmana\controller\TipAranzmanaController.class
