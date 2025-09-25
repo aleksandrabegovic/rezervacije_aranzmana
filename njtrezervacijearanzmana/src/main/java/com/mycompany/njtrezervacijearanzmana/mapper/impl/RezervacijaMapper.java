@@ -3,6 +3,7 @@ package com.mycompany.njtrezervacijearanzmana.mapper.impl;
 import com.mycompany.njtrezervacijearanzmana.dto.impl.RezervacijaDto;
 import com.mycompany.njtrezervacijearanzmana.dto.impl.StavkaRezervacijeDto;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Aranzman;
+import com.mycompany.njtrezervacijearanzmana.entity.impl.Putnik;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Rezervacija;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.StavkaRezervacije;
 import com.mycompany.njtrezervacijearanzmana.mapper.DtoEntityMapper;
@@ -21,7 +22,13 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
 
         List<StavkaRezervacijeDto> stavkeDto = e.getStavke() == null ? List.of()
             : e.getStavke().stream().map(s -> new StavkaRezervacijeDto(
-                s.getId(), s.getOpis(), s.getKolicina(), s.getCena(), s.getPopustProcenat(), s.getIznos()
+                s.getId(),
+                s.getOpis(),
+                s.getKolicina(),
+                s.getCena(),
+                s.getPopustProcenat(),
+                s.getIznos(),
+                s.getPutnik() != null ? s.getPutnik().getId() : null  
             )).collect(Collectors.toList());
 
         return new RezervacijaDto(
@@ -39,13 +46,11 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
         if (t == null) return null;
         Rezervacija r = new Rezervacija();
         r.setId(t.getId());
-        r.setDatumKreiranja(t.getDatumKreiranja()); // može ostati null -> setovaće se default u entitetu
+        r.setDatumKreiranja(t.getDatumKreiranja());
         r.setNapomena(t.getNapomena());
-        r.setUkupno(t.getUkupno()); // servis će svakako prepisati preračunatim totalom
-
+        r.setUkupno(t.getUkupno());
         if (t.getAranzmanId() != null) r.setAranzman(new Aranzman(t.getAranzmanId()));
 
-        // map stavki
         List<StavkaRezervacije> items = new ArrayList<>();
         if (t.getStavke() != null) {
             for (StavkaRezervacijeDto sd : t.getStavke()) {
@@ -55,11 +60,15 @@ public class RezervacijaMapper implements DtoEntityMapper<RezervacijaDto, Rezerv
                 s.setKolicina(sd.getKolicina());
                 s.setCena(sd.getCena());
                 s.setPopustProcenat(sd.getPopustProcenat());
-                s.setRezervacija(r); // set back-ref
+                s.setRezervacija(r);
+                if (sd.getPutnikId() != null) {
+                    s.setPutnik(new Putnik(sd.getPutnikId()));   
+                }
                 items.add(s);
             }
         }
         r.setStavke(items);
         return r;
     }
+
 }

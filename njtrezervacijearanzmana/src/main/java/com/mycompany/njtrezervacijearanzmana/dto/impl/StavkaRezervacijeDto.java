@@ -24,13 +24,16 @@ public class StavkaRezervacijeDto implements MyDto {
 
     // read-only
     private BigDecimal iznos;
+     @NotNull(message = "putnikId je obavezan")
+    private Long putnikId;
+    
+    
 
     public StavkaRezervacijeDto() {}
-
     public StavkaRezervacijeDto(Long id, String opis, int kolicina, BigDecimal cena,
-                                BigDecimal popustProcenat, BigDecimal iznos) {
+                                BigDecimal popustProcenat, BigDecimal iznos, Long putnikId) {
         this.id = id; this.opis = opis; this.kolicina = kolicina; this.cena = cena;
-        this.popustProcenat = popustProcenat; this.iznos = iznos;
+        this.popustProcenat = popustProcenat; this.iznos = iznos; this.putnikId = putnikId;
     }
 
     public Long getId() { return id; }
@@ -45,4 +48,6 @@ public class StavkaRezervacijeDto implements MyDto {
     public void setPopustProcenat(BigDecimal popustProcenat) { this.popustProcenat = popustProcenat; }
     public BigDecimal getIznos() { return iznos; }
     public void setIznos(BigDecimal iznos) { this.iznos = iznos; }
+      public Long getPutnikId() { return putnikId; }
+    public void setPutnikId(Long putnikId) { this.putnikId = putnikId; }
 }

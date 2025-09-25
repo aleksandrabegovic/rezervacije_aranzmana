@@ -26,6 +26,12 @@ public class StavkaRezervacije {
     // popust u %, npr 0, 5, 10... (0-100)
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal popustProcenat = BigDecimal.ZERO;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "putnik_id", nullable = false)
+    private Putnik putnik;
+    
+    
 
     public StavkaRezervacije() {}
     public StavkaRezervacije(Long id) { this.id = id; }
@@ -49,5 +55,8 @@ public class StavkaRezervacije {
     public BigDecimal getCena() { return cena; }
     public void setCena(BigDecimal cena) { this.cena = cena; }
     public BigDecimal getPopustProcenat() { return popustProcenat; }
-    public void setPopustProcenat(BigDecimal popustProcenat) { this.popustProcenat = popustProcenat; }
+        public void setPopustProcenat(BigDecimal popustProcenat) { this.popustProcenat = popustProcenat; }
+    public Putnik getPutnik() { return putnik; }
+    public void setPutnik(Putnik putnik) { this.putnik = putnik; }
+
 }

@@ -2,6 +2,7 @@ package com.mycompany.njtrezervacijearanzmana.servis;
 
 import com.mycompany.njtrezervacijearanzmana.dto.impl.RezervacijaDto;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Aranzman;
+import com.mycompany.njtrezervacijearanzmana.entity.impl.Putnik;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Rezervacija;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.StavkaRezervacije;
 import com.mycompany.njtrezervacijearanzmana.mapper.impl.RezervacijaMapper;
@@ -48,6 +49,11 @@ public class RezervacijaServis {
         if (r.getStavke() != null) {
             for (StavkaRezervacije s : r.getStavke()) {
                 s.setRezervacija(r);
+                if (s.getPutnik() != null && s.getPutnik().getId() != null) {
+                    s.setPutnik(em.getReference(Putnik.class, s.getPutnik().getId()));
+                } else {
+                    throw new RuntimeException("putnikId je obavezan za svaku stavku");
+                }
                 total = total.add(s.getIznos());
             }
         }
@@ -68,6 +74,11 @@ public class RezervacijaServis {
         if (r.getStavke() != null) {
             for (StavkaRezervacije s : r.getStavke()) {
                 s.setRezervacija(r);
+                if (s.getPutnik() != null && s.getPutnik().getId() != null) {
+                        s.setPutnik(em.getReference(Putnik.class, s.getPutnik().getId()));
+                    } else {
+                        throw new RuntimeException("putnikId je obavezan za svaku stavku");
+                    }
                 total = total.add(s.getIznos());
             }
         }
