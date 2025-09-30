@@ -3,6 +3,7 @@ package com.mycompany.njtrezervacijearanzmana.entity.impl;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 @Entity
 @Table(
@@ -28,10 +29,10 @@ public class Putnik {
     @Column(length=32)
     private String telefon;
 
-    // dvosmerno (opciono): kad već imamo Rezervacija
-    @OneToMany(mappedBy = "putnik", cascade = CascadeType.ALL, orphanRemoval = false)
+   
+    @OneToMany(mappedBy = "putnik", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToStringExclude // ako koristiš Lombok, da izbegneš ciklus u toString
     private List<Rezervacija> rezervacije = new ArrayList<>();
-
     public Putnik() {}
     public Putnik(Long id) { this.id = id; }
 

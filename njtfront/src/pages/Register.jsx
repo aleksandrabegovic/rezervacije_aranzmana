@@ -1,28 +1,53 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import "./auth.css";
+import { registerApi, loginApi } from "../auth/auth";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Register() {
   const [showPass, setShowPass] = useState(false);
   const [showPass2, setShowPass2] = useState(false);
+  const [err, setErr] = useState("");
+  const nav = useNavigate();
+  const { setLoggedIn, setUser } = useAuth();
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    setErr("");
     const fd = new FormData(e.currentTarget);
-    const pass = fd.get("password");
-    const confirm = fd.get("confirm");
-    if (pass !== confirm) {
-      alert("Lozinke se ne poklapaju.");
+    const ime = fd.get("ime")?.toString().trim();
+    const prezime = fd.get("prezime")?.toString().trim();
+    const korisnickoIme = fd.get("korisnickoIme")?.toString().trim();
+    const lozinka = fd.get("lozinka")?.toString();
+    const confirm = fd.get("confirm")?.toString();
+
+    if (lozinka !== confirm) {
+      setErr("Lozinke se ne poklapaju.");
       return;
     }
-    // TODO: pozovi tvoj API: /auth/register
-    // const payload = Object.fromEntries(fd);
-    // await api.post("/auth/register", payload)
-    alert("Register submit (demo)");
+
+    const payload = { ime, prezime, korisnickoIme, lozinka, uloga: "AGENT" };
+
+    try {
+      await registerApi(payload);
+      // opcioni auto-login odmah posle registracije:
+      try {
+        const { user } = await loginApi({ korisnickoIme, lozinka });
+        setLoggedIn(true);
+        setUser(user || null);
+        nav("/", { replace: true });
+      } catch {
+        nav("/login", { replace: true });
+      }
+    } catch (ex) {
+      const msg = ex?.response?.data?.message || "Registracija nije uspela.";
+      setErr(msg);
+    }
   };
 
   return (
     <main className="ts-root auth-root">
-      {/* Dekoracija: talasi + oblaci */}
       <div className="ts-waves" aria-hidden="true">
         <div className="ts-wave ts-wave1" />
         <div className="ts-wave ts-wave2" />
@@ -45,34 +70,31 @@ export default function Register() {
         </header>
 
         <form className="auth-card" onSubmit={onSubmit} noValidate>
+          {err && <div className="auth-error">{err}</div>}
+
           <div className="field two-col">
             <div>
-              <label htmlFor="firstName">Ime</label>
-              <input id="firstName" name="firstName" type="text" placeholder="Vanja" required />
+              <label htmlFor="ime">Ime</label>
+              <input id="ime" name="ime" type="text" placeholder="Vanja" required />
             </div>
             <div>
-              <label htmlFor="lastName">Prezime</label>
-              <input id="lastName" name="lastName" type="text" placeholder="Vizi" required />
+              <label htmlFor="prezime">Prezime</label>
+              <input id="prezime" name="prezime" type="text" placeholder="Vizi" required />
             </div>
           </div>
 
           <div className="field">
-            <label htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="you@example.com" required />
-          </div>
-
-          <div className="field">
-            <label htmlFor="phone">Telefon (opciono)</label>
-            <input id="phone" name="phone" type="tel" placeholder="+381 6x xxx xxxx" />
+            <label htmlFor="korisnickoIme">Korisničko ime</label>
+            <input id="korisnickoIme" name="korisnickoIme" type="text" placeholder="korisnik123" required />
           </div>
 
           <div className="field two-col">
             <div className="field">
-              <label htmlFor="password">Lozinka</label>
+              <label htmlFor="lozinka">Lozinka</label>
               <div className="password-row">
                 <input
-                  id="password"
-                  name="password"
+                  id="lozinka"
+                  name="lozinka"
                   type={showPass ? "text" : "password"}
                   placeholder="********"
                   required
@@ -88,7 +110,7 @@ export default function Register() {
                   aria-label={showPass ? "Sakrij lozinku" : "Prikaži lozinku"}
                   title={showPass ? "Sakrij lozinku" : "Prikaži lozinku"}
                 >
-                  {showPass ? "🙈" : "👁️"}
+                  {showPass ? <FiEyeOff /> : <FiEye />}
                 </span>
               </div>
               <small className="hint">Min. 6 karaktera.</small>
@@ -115,7 +137,7 @@ export default function Register() {
                   aria-label={showPass2 ? "Sakrij lozinku" : "Prikaži lozinku"}
                   title={showPass2 ? "Sakrij lozinku" : "Prikaži lozinku"}
                 >
-                  {showPass2 ? "🙈" : "👁️"}
+                  {showPass2 ? <FiEyeOff /> : <FiEye />}
                 </span>
               </div>
             </div>
@@ -124,7 +146,7 @@ export default function Register() {
           <div className="actions">
             <button className="btn-primary" type="submit">Registruj se</button>
             <p className="muted">
-              Već imaš nalog? <a className="link" href="/login">Uloguj se</a>
+              Već imaš nalog? <Link className="link" to="/login">Uloguj se</Link>
             </p>
           </div>
         </form>

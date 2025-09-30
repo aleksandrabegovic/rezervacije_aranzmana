@@ -37,7 +37,11 @@ public class Rezervacija {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "putnik_id", nullable = false)
+    private Putnik putnik;
+    
     @Column(nullable = false)                       // kada je napravljena
     private LocalDateTime datumKreiranja = LocalDateTime.now();
 
@@ -83,4 +87,17 @@ public class Rezervacija {
     
     public Zaposleni getZaposleni() { return zaposleni; }
     public void setZaposleni(Zaposleni zaposleni) { this.zaposleni = zaposleni; }
+
+    public Putnik getPutnik() {
+        return putnik;
+    }
+
+    public void setPutnik(Putnik putnik) {
+        this.putnik = putnik;
+    }
+    
+    
+    
+    
+    
 }

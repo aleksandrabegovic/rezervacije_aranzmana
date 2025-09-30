@@ -118,3 +118,11 @@ input:focus {
   border-bottom: 1px dashed rgba(121,184,255,0.35);
 }
 .link:hover { border-bottom-color: rgba(121,184,255,0.6); }
+.auth-error {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 96, 96, 0.5);
+  background: rgba(255, 96, 96, 0.08);
+  color: #ffd6d6;
+  border-radius: 10px;
+}

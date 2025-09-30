@@ -1,10 +1,22 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./navbar.css";
+import { useAuth } from "../auth/AuthContext";
+import { logoutApi } from "../auth/auth";
+import { FiLogOut, FiLogIn, FiUserPlus } from "react-icons/fi";
 
 export default function NavBar() {
+  const { loggedIn, user, logoutLocal } = useAuth();
+  const nav = useNavigate();
+
+  const logout = async () => {
+    try { await logoutApi(); } finally {
+      logoutLocal();
+      nav("/", { replace: true });
+    }
+  };
+
   return (
     <header className="tn-topbar">
-      {/* dekorativni talasi u traci */}
       <div className="tn-topbar-bg" aria-hidden="true">
         <span className="wave w1" />
         <span className="wave w2" />
@@ -17,27 +29,27 @@ export default function NavBar() {
         </div>
 
         <nav className="tn-nav" aria-label="Glavna navigacija">
-          <NavLink to="/" end className="tn-link">
-            Početna
-          </NavLink>
-          <NavLink to="/destinacije" className="tn-link">
-            Destinacije
-          </NavLink>
-          <NavLink to="/inspiracija" className="tn-link">
-            Inspiracija
-          </NavLink>
-          <NavLink to="/o-nama" className="tn-link">
-            O nama
-          </NavLink>
-          <NavLink to="/kontakt" className="tn-link">
-            Kontakt
-          </NavLink>
-          <NavLink to="/login" className="tn-link">
-            Login
-          </NavLink>
-          <NavLink to="/register" className="tn-link">
-            Registracija
-          </NavLink>
+          <NavLink to="/" end className="tn-link">Početna</NavLink>
+          <NavLink to="/destinacije" className="tn-link">Destinacije</NavLink>
+          <NavLink to="/inspiracija" className="tn-link">Inspiracija</NavLink>
+          <NavLink to="/o-nama" className="tn-link">O nama</NavLink>
+          <NavLink to="/kontakt" className="tn-link">Kontakt</NavLink>
+
+          {!loggedIn ? (
+            <>
+              <NavLink to="/login" className="tn-link">
+                <FiLogIn style={{verticalAlign:"text-bottom"}} /> Login
+              </NavLink>
+              <NavLink to="/register" className="tn-link">
+                <FiUserPlus style={{verticalAlign:"text-bottom"}} /> Registracija
+              </NavLink>
+            </>
+          ) : (
+            <span className="tn-link" role="button" onClick={logout} title="Odjavi se">
+              <FiLogOut style={{verticalAlign:"text-bottom"}} /> Logout
+              {user?.korisnickoIme ? <span style={{marginLeft:8, opacity:.8}}>({user.korisnickoIme})</span> : null}
+            </span>
+          )}
         </nav>
       </div>
     </header>

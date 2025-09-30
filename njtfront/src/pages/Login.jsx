@@ -1,20 +1,36 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import "./auth.css";
+import { loginApi } from "../auth/auth";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
+  const [err, setErr] = useState("");
+  const nav = useNavigate();
+  const { setLoggedIn, setUser } = useAuth();
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    // TODO: pozovi tvoj API: /auth/login
-    // const payload = Object.fromEntries(new FormData(e.currentTarget));
-    // await api.post("/auth/login", payload)
-    alert("Login submit (demo)");
+    setErr("");
+    const fd = new FormData(e.currentTarget);
+    const korisnickoIme = fd.get("korisnickoIme")?.toString().trim();
+    const lozinka = fd.get("lozinka")?.toString();
+
+    try {
+      const { user } = await loginApi({ korisnickoIme, lozinka });
+      setLoggedIn(true);
+      setUser(user || null);
+      nav("/", { replace: true });
+    } catch (ex) {
+      const msg = ex?.response?.data?.message || "Neuspešna prijava. Proveri podatke.";
+      setErr(msg);
+    }
   };
 
   return (
     <main className="ts-root auth-root">
-      {/* Dekoracija: talasi + oblaci */}
       <div className="ts-waves" aria-hidden="true">
         <div className="ts-wave ts-wave1" />
         <div className="ts-wave ts-wave2" />
@@ -32,35 +48,36 @@ export default function Login() {
             Dobrodošli nazad
           </h1>
           <p className="ts-subtitle" style={{ maxWidth: 560 }}>
-            Ulogujte se i nastavite planiranje putovanja—mirna jutra na pesku čekaju.
+            Ulogujte se i nastavite planiranje putovanja.
           </p>
         </header>
 
         <form className="auth-card" onSubmit={onSubmit} noValidate>
+          {err && <div className="auth-error">{err}</div>}
+
           <div className="field">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="korisnickoIme">Korisničko ime</label>
             <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
+              id="korisnickoIme"
+              name="korisnickoIme"
+              type="text"
+              placeholder="korisnik123"
               required
-              autoComplete="email"
+              autoComplete="username"
             />
-            <small className="hint">Koristite email sa kojim ste se registrovali.</small>
           </div>
 
           <div className="field">
-            <label htmlFor="password">Lozinka</label>
+            <label htmlFor="lozinka">Lozinka</label>
             <div className="password-row">
               <input
-                id="password"
-                name="password"
+                id="lozinka"
+                name="lozinka"
                 type={showPass ? "text" : "password"}
                 placeholder="********"
                 required
-                autoComplete="current-password"
                 minLength={6}
+                autoComplete="current-password"
               />
               <span
                 className="toggle"
@@ -71,7 +88,7 @@ export default function Login() {
                 aria-label={showPass ? "Sakrij lozinku" : "Prikaži lozinku"}
                 title={showPass ? "Sakrij lozinku" : "Prikaži lozinku"}
               >
-                {showPass ? "🙈" : "👁️"}
+                {showPass ? <FiEyeOff /> : <FiEye />}
               </span>
             </div>
           </div>
@@ -79,7 +96,7 @@ export default function Login() {
           <div className="actions">
             <button className="btn-primary" type="submit">Uloguj se</button>
             <p className="muted">
-              Nemaš nalog? <a className="link" href="/register">Napravi nalog</a>
+              Nemaš nalog? <Link className="link" to="/register">Napravi nalog</Link>
             </p>
           </div>
         </form>
