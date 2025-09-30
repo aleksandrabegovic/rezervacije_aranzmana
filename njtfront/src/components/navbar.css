@@ -1,0 +1,115 @@
+/* koristi iste varijable iz tvog dizajna (već si ih definisala u :root) */
+
+.tn-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--ts-border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  backdrop-filter: blur(10px);
+}
+
+.tn-topbar-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.tn-topbar-bg .wave {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: 120%;
+  top: -60%;
+  border-radius: 50%;
+  filter: blur(24px);
+  opacity: .15;
+  background: radial-gradient(60% 50% at 50% 50%, var(--ts-accent-2) 0%, transparent 70%);
+  animation: tnFloat 12s ease-in-out infinite;
+}
+.tn-topbar-bg .wave.w2 {
+  top: -50%;
+  opacity: .10;
+  animation-duration: 16s;
+  animation-direction: reverse;
+}
+
+@keyframes tnFloat {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(6px) translateX(4px); }
+}
+
+.tn-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 12px clamp(12px, 4vw, 20px);
+  isolation: isolate;
+}
+
+.tn-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+.tn-brand .logo-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(70% 70% at 50% 50%, var(--ts-accent) 0%, var(--ts-accent-2) 100%);
+  box-shadow: 0 0 20px rgba(121,184,255,0.45), 0 0 8px rgba(80,227,194,0.35);
+}
+.tn-brand .brand-name {
+  font-weight: 700;
+  letter-spacing: .4px;
+}
+
+.tn-nav {
+  justify-self: end;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  overflow-x: auto; /* mobilno: skrol ako ne staje */
+  scrollbar-width: none;
+}
+.tn-nav::-webkit-scrollbar { display: none; }
+
+.tn-link {
+  position: relative;
+  display: inline-block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--ts-muted);
+  border-radius: 10px;
+  transition: color .25s ease, background-color .25s ease;
+  white-space: nowrap;
+}
+
+/* hover pozadina (glass) */
+.tn-link:hover {
+  color: var(--ts-text);
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  border: 1px solid var(--ts-border);
+}
+
+/* aktivni link: gradijentni underline + boja */
+.tn-link.active {
+  color: var(--ts-accent-2);
+}
+.tn-link.active::after,
+.tn-link:hover::after {
+  content: "";
+  position: absolute;
+  left: 10px; right: 10px; bottom: 6px;
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--ts-accent), var(--ts-accent-2));
+  transform: scaleX(1);
+  opacity: .9;
+}
+
+/* pristupačnost */
+.tn-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(121,184,255,0.25);
+}
