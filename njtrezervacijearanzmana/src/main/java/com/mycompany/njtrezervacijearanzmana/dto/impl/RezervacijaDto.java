@@ -23,7 +23,7 @@ public class RezervacijaDto implements MyDto {
     @NotNull(message = "aranzmanId je obavezan")
     private Long aranzmanId;
 
-    // ⬇⬇⬇ NOVO: veza Rezervacija -> Zaposleni (many-to-one)
+ 
     @NotNull(message = "zaposleniId je obavezan")
     private Long zaposleniId;
 

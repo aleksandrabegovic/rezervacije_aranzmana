@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -30,7 +29,7 @@ export default function Login() {
       } else if(user?.uloga === "ADMIN") {
         nav("/admin", { replace: true });
       }else{
-        nav("/app", { replace: true });
+        nav("/", { replace: true });
       }
     } catch (ex) {
       const msg = ex?.response?.data?.message || "Neuspešna prijava. Proveri podatke.";

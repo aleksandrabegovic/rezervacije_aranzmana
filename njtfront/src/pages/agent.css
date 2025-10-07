@@ -196,4 +196,51 @@
 /* ================== UTILITY ================== */
 .controls-bar{
   display:flex; gap:10px; align-items:center; justify-content:flex-end;
+}/* ========== ŠIRA FORMA ZA KREIRANJE REZERVACIJE ========== */
+/* ova tabela (s klasom .form) ima fiksnije kolone da se sve jasno vidi */
+.tbl.form{
+  min-width: 1080px;        /* dovoljno široko da sve stane */
+  table-layout: fixed;      /* poštuj širine kolona ispod */
 }
+
+/* # kolona */
+.tbl.form thead th:nth-child(1),
+.tbl.form tbody td:nth-child(1){ width: 56px; }
+
+/* Putnik (select) */
+.tbl.form thead th:nth-child(2),
+.tbl.form tbody td:nth-child(2){ width: 300px; }
+
+/* Količina */
+.tbl.form thead th:nth-child(3),
+.tbl.form tbody td:nth-child(3){ width: 110px; }
+
+/* Cena */
+.tbl.form thead th:nth-child(4),
+.tbl.form tbody td:nth-child(4){ width: 140px; }
+
+/* Popust % */
+.tbl.form thead th:nth-child(5),
+.tbl.form tbody td:nth-child(5){ width: 120px; }
+
+/* Opis – neka dobije ostatak prostora */
+.tbl.form thead th:nth-child(6),
+.tbl.form tbody td:nth-child(6){ width: auto; }
+
+/* X dugme */
+.tbl.form thead th:nth-child(7),
+.tbl.form tbody td:nth-child(7){ width: 64px; }
+
+/* malo veći inputi u formi */
+.tbl.form input,
+.tbl.form select{
+  height: 42px;
+  font-size: 15px;
+  padding: 8px 40px 8px 12px;   /* malo komfornije + prostor za strelicu */
+}
+
+/* na manjim ekranima zadrži horizontalni scroll umesto da se sve zgrči */
+.table-wrap{
+  overflow-x: auto;           /* već imaš overflow:auto; ovo je eksplicitno za X */
+}
+

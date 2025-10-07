@@ -1,4 +1,3 @@
-// src/pages/AgentDashboard.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import "./agent.css";
 import http from "../api";
@@ -370,7 +369,7 @@ function RezervacijePane() {
         </div>
 
         <div className="table-wrap">
-          <table className="tbl">
+         <table className="tbl form">
             <thead>
               <tr>
                 <th>#</th>

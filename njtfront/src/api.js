@@ -4,7 +4,7 @@ import { getToken } from "./auth/storage";
 
  
 const http = axios.create({
-  baseURL: "http://localhost:8080/api", // po potrebi promeni na /api
+  baseURL: "http://localhost:8080/api",  
   withCredentials: false,
 });
 

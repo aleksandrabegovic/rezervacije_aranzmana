@@ -33,10 +33,18 @@ export default function Register() {
       await registerApi(payload);
       // opcioni auto-login odmah posle registracije:
       try {
-        const { user } = await loginApi({ korisnickoIme, lozinka });
-        setLoggedIn(true);
-        setUser(user || null);
-        nav("/", { replace: true });
+         const { user } = await loginApi({ korisnickoIme, lozinka });
+              setLoggedIn(true);
+              setUser(user || null);
+        
+              //   Redirect po ulozi
+              if (user?.uloga === "AGENT") {
+                nav("/agent", { replace: true });
+              } else if(user?.uloga === "ADMIN") {
+                nav("/admin", { replace: true });
+              }else{
+                nav("/", { replace: true });
+              }
       } catch {
         nav("/login", { replace: true });
       }
