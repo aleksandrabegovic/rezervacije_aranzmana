@@ -9,7 +9,7 @@ Kratko uputstvo za preuzimanje i pokretanje:
 
 2) Backend (Spring Boot):
    cd njtrezervacijearanzmana
-   # Podesi konekciju ka MySQL u src/main/resources/application.yml
+   # Podesi konekciju ka MySQL u src/main/resources/application.properties
    mvn spring-boot:run
    # API na http://localhost:8080/api
 
