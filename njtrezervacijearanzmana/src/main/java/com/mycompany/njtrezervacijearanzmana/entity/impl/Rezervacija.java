@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
 /*
 Rezervacija ima stavke (lista) i aranzman (objekat).
 Po difoltu su veze LAZY (ne učitavaju se odmah).
@@ -38,12 +39,13 @@ public class Rezervacija {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "putnik_id", nullable = false)
+    @ManyToOne(optional = true)            
+    @JoinColumn(name = "putnik_id")
     private Putnik putnik;
     
-    @Column(nullable = false)                       // kada je napravljena
-    private LocalDateTime datumKreiranja = LocalDateTime.now();
+    @CreationTimestamp
+    @Column(name = "datum_kreiranja", updatable = false, nullable = false)
+    private LocalDateTime datumKreiranja;
 
     @Column(length = 500)
     private String napomena;

@@ -25,15 +25,11 @@ export default function NavBar() {
       <div className="tn-inner">
         <div className="tn-brand">
           <span className="logo-dot" />
-          <span className="brand-name">MirnaTalasa</span>
+          <span className="brand-name">RezervacijeAranzmana</span>
         </div>
 
         <nav className="tn-nav" aria-label="Glavna navigacija">
-          <NavLink to="/" end className="tn-link">Početna</NavLink>
-          <NavLink to="/destinacije" className="tn-link">Destinacije</NavLink>
-          <NavLink to="/inspiracija" className="tn-link">Inspiracija</NavLink>
-          <NavLink to="/o-nama" className="tn-link">O nama</NavLink>
-          <NavLink to="/kontakt" className="tn-link">Kontakt</NavLink>
+          <NavLink to="/" end className="tn-link">Početna</NavLink> 
 
           {!loggedIn ? (
             <>

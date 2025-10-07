@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -22,7 +23,13 @@ export default function Login() {
       const { user } = await loginApi({ korisnickoIme, lozinka });
       setLoggedIn(true);
       setUser(user || null);
-      nav("/", { replace: true });
+
+      // ✅ Redirect po ulozi
+      if (user?.uloga === "AGENT") {
+        nav("/agent", { replace: true });
+      } else {
+        nav("/app", { replace: true });
+      }
     } catch (ex) {
       const msg = ex?.response?.data?.message || "Neuspešna prijava. Proveri podatke.";
       setErr(msg);

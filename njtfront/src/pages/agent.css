@@ -1,0 +1,199 @@
+/* src/pages/agent.css */
+
+/* ================== THEME HOOKS (po potrebi) ================== */
+:root{
+  --ts-bg: #0e1627;
+  --ts-text: #eef3ff;
+  --ts-muted: #a9b3c9;
+  --ts-border: rgba(255,255,255,.14);
+  --ts-glass: rgba(255,255,255,.05);
+  --ts-shadow: 0 6px 24px rgba(0,0,0,.35);
+  --ts-accent-2: #79b8ff;
+  --ts-subrow: rgba(255,255,255,.04);
+}
+
+/* ================== LAYOUT ================== */
+.agent-root{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ================== HEADER ================== */
+.agent-header h1{
+  margin: 0 0 6px;
+  font-size: clamp(32px,5vw,48px);
+  letter-spacing:-0.02em;
+}
+.agent-header p{
+  margin: 0 0 18px;
+  color: var(--ts-muted);
+}
+
+/* ================== TABS ================== */
+.agent-tabs{
+  display:flex; gap:18px;
+  border-bottom:1px solid var(--ts-border);
+  margin: 10px 0 18px;
+}
+.tab-btn{
+  appearance:none; background:transparent; border:0;
+  color:var(--ts-muted); padding:12px 4px; font-weight:600;
+  cursor:pointer; position:relative;
+}
+.tab-btn:hover{ color:var(--ts-text); }
+.tab-btn.active{ color:var(--ts-text); }
+.tab-btn.active::after{
+  content:""; position:absolute; left:0; right:0; bottom:-1px; height:2px;
+  background: linear-gradient(90deg, var(--ts-accent-2), rgba(121,184,255,.25));
+  border-radius:2px;
+}
+
+/* ================== GLASS PANE ================== */
+.pane{
+  background: linear-gradient(180deg, var(--ts-glass), rgba(255,255,255,0.02));
+  border: 1px solid var(--ts-border);
+  border-radius: 18px;
+  box-shadow: var(--ts-shadow);
+  padding: 18px;
+}
+.pane-head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: 14px;
+}
+.pane-head h2{ margin:0; font-size:20px; letter-spacing:.2px; }
+
+/* ================== MINI FORM ================== */
+.mini-form{
+  display:grid; grid-template-columns: 1fr 1fr auto;
+  gap:10px; margin-bottom:16px;
+}
+@media (max-width: 900px){ .mini-form{ grid-template-columns:1fr; } }
+.mini-form.stack .row{ display:flex; flex-wrap:wrap; gap:10px; }
+.mini-form .row.between{ justify-content:space-between; align-items:center; }
+
+/* ================== TABLE ================== */
+.table-wrap{ overflow:auto; border-radius:12px; }
+.table-wrap::-webkit-scrollbar{ height:10px; width:10px; }
+.table-wrap::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.16); border-radius:8px; }
+.table-wrap::-webkit-scrollbar-track{ background:transparent; }
+
+.tbl{ width:100%; border-collapse:separate; border-spacing:0; }
+.tbl thead th{
+  position: sticky; top: 0;
+  text-align:left; font-size:13px; color:var(--ts-muted);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border-bottom:1px solid var(--ts-border); padding:10px 10px; font-weight:600;
+  backdrop-filter: blur(6px);
+}
+.tbl tbody td{
+  padding:10px 10px; border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:14px; color:var(--ts-text);
+}
+.tbl tbody tr:hover{ background: rgba(255,255,255,.03); }
+.tbl .empty{ text-align:center; color:var(--ts-muted); padding:14px 8px; }
+
+/* Kompaktna podtabela (stavke) */
+.tbl.compact thead th,
+.tbl.compact tbody td{ padding:8px 10px; font-size:13px; }
+
+/* Numeričke kolone – desno poravnanje (opšti fallback) */
+.tbl td:nth-child(3),
+.tbl td:nth-child(4),
+.tbl td:nth-child(5),
+.tbl.compact td:nth-child(3),
+.tbl.compact td:nth-child(4),
+.tbl.compact td:nth-child(5),
+.tbl.compact td:nth-child(6){
+  text-align:right;
+}
+
+/* Sub-row (expand) vizuelni kontejner */
+.tbl-subrow{
+  background: var(--ts-subrow);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+/* ================== CONTROLS IN TABLE ================== */
+.tbl input, .tbl select{
+  width:100%;
+  height: 36px;
+  padding: 6px 36px 6px 12px;  /* prostor za strelicu kod selecta */
+  border-radius: 10px;
+  border: 1px solid var(--ts-border);
+  background: rgba(255,255,255,0.06);
+  color: var(--ts-text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease, transform .06s ease;
+}
+
+/* lep fokus i hover */
+.tbl input:hover, .tbl select:hover{
+  background: rgba(255,255,255,0.08);
+}
+.tbl input:focus, .tbl select:focus{
+  border-color: rgba(121,184,255,0.48);
+  box-shadow: 0 0 0 3px rgba(121,184,255,0.16);
+  background: rgba(255,255,255,0.10);
+}
+
+/* === CUSTOM SELECT LOOK === */
+.tbl select{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color-scheme: dark;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='rgba(233,240,255,0.8)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px 16px;
+  padding-right: 36px;
+}
+.tbl select::-ms-expand{ display:none; } /* IE/Edge stara strelica */
+
+/* Opcije u listi – tamnija pozadina, bolji kontrast (podržano u većini Chromium/Firefox) */
+.tbl select option{
+  background: #0f1a2b;
+  color: var(--ts-text);
+}
+
+/* Placeholder boja */
+.tbl input::placeholder{ color: rgba(233,240,255,.55); }
+
+/* Dugmad u tabeli (kompaktna) */
+.tbl .btn{ height:36px; padding: 6px 12px; }
+.tbl .btn.danger{ padding: 6px 10px; }
+
+/* ================== BUTTONS ================== */
+.btn{
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--ts-border);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  color: var(--ts-text); cursor: pointer; box-shadow: var(--ts-shadow);
+  transition: border-color .2s ease, transform .1s ease, background-color .2s;
+}
+.btn:hover{ border-color: rgba(121,184,255,.45); transform: translateY(-1px); }
+.btn-primary{
+  border: 1px solid rgba(121,184,255,.35);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  color: var(--ts-text); font-weight:600;
+  padding: 10px 16px; border-radius:12px; cursor:pointer; box-shadow: var(--ts-shadow);
+}
+.btn-primary:hover{ border-color: rgba(121,184,255,.55); transform: translateY(-1px); }
+.btn.danger{
+  border-color: rgba(255,96,96,.5);
+  color:#ffd6d6;
+  background: linear-gradient(180deg, rgba(255,96,96,.08), rgba(255,96,96,.03));
+}
+.btn.danger:hover{ border-color: rgba(255,96,96,.75); }
+
+/* ================== UTILITY ================== */
+.controls-bar{
+  display:flex; gap:10px; align-items:center; justify-content:flex-end;
+}

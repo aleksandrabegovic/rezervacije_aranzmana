@@ -1,6 +1,7 @@
 package com.mycompany.njtrezervacijearanzmana.servis;
 
 import com.mycompany.njtrezervacijearanzmana.dto.impl.RezervacijaDto;
+import com.mycompany.njtrezervacijearanzmana.dto.impl.StavkaRezervacijeDto;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Aranzman;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Putnik;
 import com.mycompany.njtrezervacijearanzmana.entity.impl.Rezervacija;
@@ -39,22 +40,35 @@ public class RezervacijaServis {
     public RezervacijaDto create(RezervacijaDto dto) {
         Rezervacija r = mapper.toEntity(dto);
 
-        // reference bez SELECT-a
+        // 1) Reference bez SELECT-a
         if (dto.getAranzmanId() != null) {
             r.setAranzman(em.getReference(Aranzman.class, dto.getAranzmanId()));
         }
 
-        // poveži back-ref (ako nije već) i izračunaj total
+        // 2) Ako rezervacija nema putnika, preuzmi iz prve stavke
+        Long headerPutnikId = extractHeaderPutnikIdFromItems(dto);
+        if (r.getPutnik() == null && headerPutnikId != null) {
+            r.setPutnik(em.getReference(Putnik.class, headerPutnikId));
+        }
+        if (isRezervacijaPutnikRequiredInDb() && (r.getPutnik() == null || r.getPutnik().getId() == null)) {
+            throw new RuntimeException("putnikId (u rezervaciji ili prvoj stavci) je obavezan.");
+        }
+
+        // 3) Poveži stavke, validiraj putnike i izračunaj total preko GETTER-a (nema setIznos!)
         BigDecimal total = BigDecimal.ZERO;
         if (r.getStavke() != null) {
             for (StavkaRezervacije s : r.getStavke()) {
                 s.setRezervacija(r);
-                if (s.getPutnik() != null && s.getPutnik().getId() != null) {
-                    s.setPutnik(em.getReference(Putnik.class, s.getPutnik().getId()));
-                } else {
-                    throw new RuntimeException("putnikId je obavezan za svaku stavku");
+
+                Long sid = (s.getPutnik() != null) ? s.getPutnik().getId() : null;
+                if (sid == null) {
+                    throw new RuntimeException("putnikId je obavezan za svaku stavku.");
                 }
-                total = total.add(s.getIznos());
+                s.setPutnik(em.getReference(Putnik.class, sid));
+
+                // iznos se računa u entitetu: s.getIznos()
+                BigDecimal iznos = s.getIznos();
+                total = total.add(iznos != null ? iznos : BigDecimal.ZERO);
             }
         }
         r.setUkupno(total.setScale(2, java.math.RoundingMode.HALF_UP));
@@ -70,16 +84,27 @@ public class RezervacijaServis {
             r.setAranzman(em.getReference(Aranzman.class, dto.getAranzmanId()));
         }
 
+        Long headerPutnikId = extractHeaderPutnikIdFromItems(dto);
+        if (r.getPutnik() == null && headerPutnikId != null) {
+            r.setPutnik(em.getReference(Putnik.class, headerPutnikId));
+        }
+        if (isRezervacijaPutnikRequiredInDb() && (r.getPutnik() == null || r.getPutnik().getId() == null)) {
+            throw new RuntimeException("putnikId (u rezervaciji ili prvoj stavci) je obavezan.");
+        }
+
         BigDecimal total = BigDecimal.ZERO;
         if (r.getStavke() != null) {
             for (StavkaRezervacije s : r.getStavke()) {
                 s.setRezervacija(r);
-                if (s.getPutnik() != null && s.getPutnik().getId() != null) {
-                        s.setPutnik(em.getReference(Putnik.class, s.getPutnik().getId()));
-                    } else {
-                        throw new RuntimeException("putnikId je obavezan za svaku stavku");
-                    }
-                total = total.add(s.getIznos());
+
+                Long sid = (s.getPutnik() != null) ? s.getPutnik().getId() : null;
+                if (sid == null) {
+                    throw new RuntimeException("putnikId je obavezan za svaku stavku.");
+                }
+                s.setPutnik(em.getReference(Putnik.class, sid));
+
+                BigDecimal iznos = s.getIznos(); // nema setovanja
+                total = total.add(iznos != null ? iznos : BigDecimal.ZERO);
             }
         }
         r.setUkupno(total.setScale(2, java.math.RoundingMode.HALF_UP));
@@ -89,4 +114,17 @@ public class RezervacijaServis {
     }
 
     public void deleteById(Long id) { repo.deleteById(id); }
+
+    // ===== Helpers =====
+
+    private Long extractHeaderPutnikIdFromItems(RezervacijaDto dto) {
+        if (dto == null || dto.getStavke() == null || dto.getStavke().isEmpty()) return null;
+        StavkaRezervacijeDto first = dto.getStavke().get(0);
+        return first != null ? first.getPutnikId() : null;
+    }
+
+    private boolean isRezervacijaPutnikRequiredInDb() {
+        // Ako je kolona NOT NULL, neka bude true
+        return true;
+    }
 }

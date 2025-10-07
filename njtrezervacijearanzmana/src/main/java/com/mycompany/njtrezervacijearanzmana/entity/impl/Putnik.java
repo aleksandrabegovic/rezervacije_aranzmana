@@ -31,7 +31,7 @@ public class Putnik {
 
    
     @OneToMany(mappedBy = "putnik", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToStringExclude // ako koristiš Lombok, da izbegneš ciklus u toString
+    @ToStringExclude  
     private List<Rezervacija> rezervacije = new ArrayList<>();
     public Putnik() {}
     public Putnik(Long id) { this.id = id; }

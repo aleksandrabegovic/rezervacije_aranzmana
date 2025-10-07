@@ -1,16 +1,22 @@
 import axios from "axios";
 import { getToken } from "./auth/storage";
+ 
 
-const api = axios.create({
-  baseURL: "http://localhost:8080/api",  
+ 
+const http = axios.create({
+  baseURL: "http://localhost:8080/api", // po potrebi promeni na /api
   withCredentials: false,
 });
 
  
-api.interceptors.request.use((config) => {
+http.interceptors.request.use((config) => {
   const token = getToken();
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
-export default api;
+ 
+
+export default http;

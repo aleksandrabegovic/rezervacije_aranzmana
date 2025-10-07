@@ -27,7 +27,7 @@ export default function Register() {
       return;
     }
 
-    const payload = { ime, prezime, korisnickoIme, lozinka, uloga: "AGENT" };
+    const payload = { ime, prezime, korisnickoIme, lozinka };
 
     try {
       await registerApi(payload);
@@ -42,6 +42,7 @@ export default function Register() {
       }
     } catch (ex) {
       const msg = ex?.response?.data?.message || "Registracija nije uspela.";
+      console.log(ex);
       setErr(msg);
     }
   };
@@ -75,11 +76,11 @@ export default function Register() {
           <div className="field two-col">
             <div>
               <label htmlFor="ime">Ime</label>
-              <input id="ime" name="ime" type="text" placeholder="Vanja" required />
+              <input id="ime" name="ime" type="text" placeholder="Aleksandra" required />
             </div>
             <div>
               <label htmlFor="prezime">Prezime</label>
-              <input id="prezime" name="prezime" type="text" placeholder="Vizi" required />
+              <input id="prezime" name="prezime" type="text" placeholder="Begovic" required />
             </div>
           </div>
 
