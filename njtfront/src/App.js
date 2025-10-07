@@ -8,6 +8,7 @@ import { AuthProvider } from './auth/AuthContext';
 import AgentDashboard from './pages/AgentDashboard';
 import RequireAuth from './auth/RequireAuth';
 import RequireRole from './auth/RequireRole';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 function App() {
@@ -25,6 +26,16 @@ function App() {
                     <RequireAuth>
                       <RequireRole role="AGENT">
                         <AgentDashboard />
+                      </RequireRole>
+                    </RequireAuth>
+                  }
+                />
+                 <Route
+                  path="/admin"
+                  element={
+                    <RequireAuth>
+                      <RequireRole role="ADMIN">
+                        <AdminDashboard />
                       </RequireRole>
                     </RequireAuth>
                   }

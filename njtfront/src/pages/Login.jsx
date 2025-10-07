@@ -24,10 +24,12 @@ export default function Login() {
       setLoggedIn(true);
       setUser(user || null);
 
-      // ✅ Redirect po ulozi
+      //   Redirect po ulozi
       if (user?.uloga === "AGENT") {
         nav("/agent", { replace: true });
-      } else {
+      } else if(user?.uloga === "ADMIN") {
+        nav("/admin", { replace: true });
+      }else{
         nav("/app", { replace: true });
       }
     } catch (ex) {
