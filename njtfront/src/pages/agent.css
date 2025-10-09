@@ -244,3 +244,108 @@
   overflow-x: auto;           /* već imaš overflow:auto; ovo je eksplicitno za X */
 }
 
+/* ==== REZERVACIJE – poravnanje širina i vidljivost ==== */
+.rez-pane { overflow: visible; } /* da dropdown ne bude isečen */
+
+/* forma: form-tabela da bude iste širine kao lista ispod */
+.rez-form .rez-items-wrap,
+.rez-list-wrap {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* tabela stavki – isključi staro min-width i nateraj 100% širinu */
+.rez-items-table {
+  width: 100%;
+  min-width: 0 !important;   /* pregazi prethodni min-width:1080px ako postoji */
+  table-layout: fixed;       /* stabilne kolone */
+}
+
+/* identičan “grid” osećaj kao dole; kolone su jasne */
+.rez-items-table thead th:nth-child(1),
+.rez-items-table tbody td:nth-child(1) { width: 56px; }
+
+.rez-items-table thead th:nth-child(2),
+.rez-items-table tbody td:nth-child(2) { width: 32%; } /* putnik veća kolona */
+
+.rez-items-table thead th:nth-child(3),
+.rez-items-table tbody td:nth-child(3) { width: 10%; }
+
+.rez-items-table thead th:nth-child(4),
+.rez-items-table tbody td:nth-child(4) { width: 14%; }
+
+.rez-items-table thead th:nth-child(5),
+.rez-items-table tbody td:nth-child(5) { width: 12%; }
+
+.rez-items-table thead th:nth-child(6),
+.rez-items-table tbody td:nth-child(6) { width: auto; } /* opis uzima ostatak */
+
+.rez-items-table thead th:nth-child(7),
+.rez-items-table tbody td:nth-child(7) { width: 64px; }
+
+/* veći/select za Putnik – jasnije na tamnoj temi */
+.rez-items-table select,
+.rez-items-table input {
+  height: 44px;
+  font-size: 15px;
+  padding: 8px 40px 8px 12px;
+}
+
+/* dropdown da stane u viewport; roditelji već nemaju overflow hidden */
+.rez-items-wrap { overflow-x: auto; }
+
+/* poravnanje dugmadi forme desno i razmak od tabele */
+.rez-controls {
+  margin-top: 10px;
+  justify-content: flex-end;
+}
+
+/* lista rezervacija – neka koristi punu širinu kao i gornja tabela */
+.rez-list-table { width: 100%; }
+
+/* sitno: neka opis u formi sme da prelomi red, da se ne “izdužuje” tabela */
+.rez-items-table td:nth-child(6) input { white-space: normal; }
+
+/* numeričke kolone desno */
+.rez-items-table td:nth-child(3),
+.rez-items-table td:nth-child(4),
+.rez-items-table td:nth-child(5) { text-align: right; }
+/* ===== Rezervacije – ispravi grid da tabela bude puna širina ===== */
+
+/* prebij mini-form layout samo za formu rezervacija */
+.rez-form {
+  display: grid;
+  grid-template-columns: 1fr;      /* jedna kolona preko cele širine */
+  gap: 10px;
+}
+
+/* prvi red (aranžman + napomena) neka i dalje bude fleksibilan,
+   ali neka zauzme ceo red forme */
+.rez-form .row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* TABELA STAVKI MORA PREKO CELE ŠIRINE FORME */
+.rez-form .rez-items-wrap {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* Kontrole ispod tabele (Dodaj stavku / Snimi) takođe ceo red,
+   ali poravnane desno */
+.rez-form .rez-controls {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Bez zatezanja širine sa starog .tbl.form pravila */
+.rez-items-table {
+  width: 100%;
+  min-width: 0 !important;  /* pogazi min-width:1080px */
+  table-layout: fixed;
+}

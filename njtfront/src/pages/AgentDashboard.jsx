@@ -202,6 +202,7 @@ function AranzmaniPane() {
 }
 
 /* ==================== REZERVACIJE ==================== */
+ /* ==================== REZERVACIJE ==================== */
 function RezervacijePane() {
   const { user } = useAuth();
 
@@ -219,11 +220,10 @@ function RezervacijePane() {
   const [submitting, setSubmitting] = useState(false);
 
   // detalji rezervacija (expand)
-  const [open, setOpen] = useState({});     // { [rezId]: true/false }
-  const [details, setDetails] = useState({});// { [rezId]: RezervacijaDto }
-  const [loadingDetails, setLoadingDetails] = useState({}); // { [rezId]: true/false }
+  const [open, setOpen] = useState({});
+  const [details, setDetails] = useState({});
+  const [loadingDetails, setLoadingDetails] = useState({});
 
-  // lookup za ime putnika po id-u
   const putnikNameById = useMemo(() => {
     const m = new Map();
     putnici.forEach(p => m.set(p.id, `${p.ime} ${p.prezime}${p.email ? ` (${p.email})` : ""}`));
@@ -330,7 +330,6 @@ function RezervacijePane() {
 
   const toggleDetails = async (rezId) => {
     setOpen(prev => ({ ...prev, [rezId]: !prev[rezId] }));
-    // Ako otvaramo i nemamo već detalje — dovuci ih
     const willOpen = !open[rezId];
     if (willOpen && !details[rezId]) {
       setLoadingDetails(prev => ({ ...prev, [rezId]: true }));
@@ -344,14 +343,14 @@ function RezervacijePane() {
   };
 
   return (
-    <div className="pane">
+    <div className="pane rez-pane">
       <div className="pane-head">
         <h2>Rezervacije</h2>
         <button className="btn" onClick={load}>Osveži</button>
       </div>
 
-      {/* Forma za dodavanje */}
-      <form className="mini-form stack" onSubmit={create}>
+      {/* === FORMA + TABELA STAVKI === */}
+      <form className="mini-form stack rez-form" onSubmit={create}>
         <div className="row">
           <select value={aranzmanId} onChange={e => setAranzmanId(e.target.value)} required>
             <option value="">-- Izaberi aranžman --</option>
@@ -368,8 +367,9 @@ function RezervacijePane() {
           />
         </div>
 
-        <div className="table-wrap">
-         <table className="tbl form">
+        {/* Tabela stavki – uvek punu širinu pane-a */}
+        <div className="table-wrap rez-items-wrap">
+          <table className="tbl form rez-items-table">
             <thead>
               <tr>
                 <th>#</th>
@@ -441,7 +441,7 @@ function RezervacijePane() {
           </table>
         </div>
 
-        <div className="controls-bar">
+        <div className="controls-bar rez-controls">
           <button type="button" className="btn" onClick={addRow}>+ Dodaj stavku</button>
           <button className="btn-primary" type="submit" disabled={submitting}>
             {submitting ? "Snimam..." : "Snimi rezervaciju"}
@@ -449,9 +449,9 @@ function RezervacijePane() {
         </div>
       </form>
 
-      {/* Lista postojećih rezervacija + EXPAND STAVKE */}
-      <div className="table-wrap" style={{ marginTop: 16 }}>
-        <table className="tbl">
+      {/* === TABELA POSTOJEĆIH REZERVACIJA === */}
+      <div className="table-wrap rez-list-wrap">
+        <table className="tbl rez-list-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -477,44 +477,42 @@ function RezervacijePane() {
                   </td>
                 </tr>
                 {open[r.id] && (
-                <tr>
+                  <tr>
                     <td colSpan={5}>
-                    <div className="tbl-subrow">
+                      <div className="tbl-subrow">
                         {loadingDetails[r.id] && <div className="empty">Učitavam stavke...</div>}
                         {!loadingDetails[r.id] && details[r.id] && Array.isArray(details[r.id].stavke) && details[r.id].stavke.length > 0 ? (
-                        <div className="table-wrap" style={{ margin: 8 }}>
+                          <div className="table-wrap" style={{ margin: 8 }}>
                             <table className="tbl compact">
-                            <thead>
-                              <tr>
-                                <th>#</th>
-                                <th>Putnik</th>
-                                <th>Količina</th>
-                                <th>Cena</th>
-                                <th>Popust %</th>
-                                <th>Iznos</th>
-                                <th>Opis</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {details[r.id].stavke.map((s, i) => (
-                                <tr key={s.id ?? i}>
-                                  <td>{i + 1}</td>
-                                  <td>{putnikNameById.get(s.putnikId) || `ID ${s.putnikId}`}</td>
-                                  <td>{s.kolicina}</td>
-                                  <td>{fmtMoney(s.cena)}</td>
-                                  <td>{Number(s.popustProcenat ?? 0)}</td>
-                                  <td>{fmtMoney(s.iznos)}</td>
-                                  <td>{s.opis || "-"}</td>
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Putnik</th>
+                                  <th>Količina</th>
+                                  <th>Cena</th>
+                                  <th>Popust %</th>
+                                  <th>Iznos</th>
+                                  <th>Opis</th>
                                 </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                          
-                        </div>
-                      ) : (!loadingDetails[r.id] && <div className="empty">Nema stavki za prikaz.</div>)}
-                        </div>
+                              </thead>
+                              <tbody>
+                                {details[r.id].stavke.map((s, i) => (
+                                  <tr key={s.id ?? i}>
+                                    <td>{i + 1}</td>
+                                    <td>{putnikNameById.get(s.putnikId) || `ID ${s.putnikId}`}</td>
+                                    <td>{s.kolicina}</td>
+                                    <td>{fmtMoney(s.cena)}</td>
+                                    <td>{Number(s.popustProcenat ?? 0)}</td>
+                                    <td>{fmtMoney(s.iznos)}</td>
+                                    <td>{s.opis || "-"}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (!loadingDetails[r.id] && <div className="empty">Nema stavki za prikaz.</div>)}
+                      </div>
                     </td>
-                    
                   </tr>
                 )}
               </React.Fragment>
@@ -526,3 +524,4 @@ function RezervacijePane() {
     </div>
   );
 }
+
